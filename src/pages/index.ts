@@ -1,0 +1,10 @@
+export { LoginPage } from './LoginPage';
+export { SignUpPage } from './SignUpPage';
+export { OnboardingPage } from './OnboardingPage';
+export { HomePage } from './HomePage';
+export { GiftFinderPage } from './GiftFinderPage';
+export { RecommendationsPage } from './RecommendationsPage';
+export { DiscoverPage } from './DiscoverPage';
+export { SavedGiftsPage } from './SavedGiftsPage';
+export { ProfilePage } from './ProfilePage';
+export { GiftDetailPage } from './GiftDetailPage';
