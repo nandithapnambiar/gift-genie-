@@ -9,6 +9,10 @@ services:
         value: 20
       - key: API_PORT
         value: 10000
+      - key: ALLOWED_ORIGINS
+        sync: false
+      - key: SESSION_TTL_DAYS
+        value: 30
     disk:
       name: gift-genie-data
       mountPath: /opt/render/project/src/data

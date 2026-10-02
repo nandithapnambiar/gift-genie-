@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gift Genie Database Design</title>
+  <style>
+    @page { size: A4 landscape; margin: 10mm; }
+    :root { --ink:#23313d; --line:#728292; --table:#527da8; --soft:#f7fafb; }
+    * { box-sizing: border-box; }
+    body { margin:0; background:#fff; color:var(--ink); font-family:Arial,Helvetica,sans-serif; }
+    .page { max-width:1400px; min-height:720px; margin:auto; padding:18px; position:relative; }
+    h1 { margin:0 0 4px; font-size:25px; }
+    .subtitle { margin:0 0 14px; color:#53616e; font-size:12px; }
+    .diagram { position:relative; height:620px; border:1px solid #d6dde3; background:linear-gradient(#fff,#fbfcfd); overflow:hidden; }
+    svg { position:absolute; inset:0; width:100%; height:100%; z-index:0; }
+    .relation { font-size:11px; fill:#3d4b56; font-weight:600; }
+    .table { position:absolute; width:245px; background:white; border:2px solid var(--line); border-radius:5px; overflow:hidden; box-shadow:0 2px 5px #00000012; z-index:1; }
+    .table h2 { margin:0; padding:8px 10px; color:#fff; text-align:center; font-size:13px; letter-spacing:.3px; }
+    .table.users { left:3%; top:185px; border-color:var(--table); } .users h2 { background:var(--table); }
+    .table.gifts { left:37%; top:35px; border-color:var(--table); } .gifts h2 { background:var(--table); }
+    .table.sessions { right:3%; top:185px; border-color:var(--table); } .sessions h2 { background:var(--table); }
+    .table.saved { left:14%; bottom:28px; border-color:var(--table); } .saved h2 { background:var(--table); }
+    .table.session-note { right:20%; bottom:28px; border-color:var(--table); } .session-note h2 { background:var(--table); }
+    .row { display:grid; grid-template-columns:55px 1fr 40px; min-height:25px; border-top:1px solid #d5dde2; font-size:11px; }
+    .row span { padding:5px 7px; } .row span:first-child { color:#52616d; } .row span:last-child { font-weight:bold; color:#42647c; text-align:center; }
+    .note { position:absolute; left:50%; bottom:5px; transform:translateX(-50%); font-size:11px; color:#5d6a75; z-index:2; }
+    footer { display:flex; justify-content:space-between; margin-top:8px; color:#63717c; font-size:10px; }
+    .explanation { margin-top:12px; display:grid; grid-template-columns:repeat(4,1fr); gap:8px; font-size:10px; color:#3d4b56; }
+    .explanation div { border:1px solid #c9d4dd; border-radius:4px; padding:7px; background:#f7fafb; }
+    .explanation strong { display:block; color:#315f88; margin-bottom:3px; }
+    @media print { .page { padding:0; } .diagram { border:0; } }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <h1>Gift Genie — Database Design</h1>
+    <p class="subtitle">Entity relationship diagram for the Node.js, Express, and SQLite backend. PK = primary key · FK = foreign key.</p>
+    <section class="diagram" aria-label="Gift Genie database entity relationship diagram">
+      <svg viewBox="0 0 1200 620" preserveAspectRatio="none" aria-hidden="true">
+        <defs>
+          <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#728292"/></marker>
+        </defs>
+        <line x1="295" y1="245" x2="905" y2="245" stroke="#728292" stroke-width="2" marker-end="url(#arrow)"/>
+        <text x="570" y="233" class="relation">has sessions</text>
+        <line x1="275" y1="370" x2="260" y2="485" stroke="#728292" stroke-width="2" marker-end="url(#arrow)"/>
+        <text x="214" y="427" class="relation">saves</text>
+        <line x1="510" y1="260" x2="390" y2="485" stroke="#728292" stroke-width="2" marker-end="url(#arrow)"/>
+        <text x="424" y="365" class="relation">is saved in</text>
+        <line x1="1000" y1="370" x2="900" y2="485" stroke="#728292" stroke-width="2" stroke-dasharray="6 5"/>
+        <text x="930" y="427" class="relation">browser state</text>
+      </svg>
+
+      <article class="table users">
+        <h2>USERS</h2>
+        <div class="row"><span>string</span><span>id</span><span>PK</span></div>
+        <div class="row"><span>string</span><span>name</span><span></span></div>
+        <div class="row"><span>string</span><span>email</span><span></span></div>
+        <div class="row"><span>string</span><span>password_hash</span><span></span></div>
+        <div class="row"><span>string</span><span>avatar</span><span></span></div>
+        <div class="row"><span>string</span><span>created_at</span><span></span></div>
+      </article>
+
+      <article class="table gifts">
+        <h2>GIFTS</h2>
+        <div class="row"><span>int</span><span>id</span><span>PK</span></div>
+        <div class="row"><span>string</span><span>name</span><span></span></div>
+        <div class="row"><span>int</span><span>price</span><span></span></div>
+        <div class="row"><span>float</span><span>rating</span><span></span></div>
+        <div class="row"><span>int</span><span>reviews</span><span></span></div>
+        <div class="row"><span>string</span><span>category</span><span></span></div>
+        <div class="row"><span>string</span><span>badge</span><span></span></div>
+        <div class="row"><span>string</span><span>image</span><span></span></div>
+        <div class="row"><span>string</span><span>explanation</span><span></span></div>
+        <div class="row"><span>JSON</span><span>tags</span><span></span></div>
+      </article>
+
+      <article class="table sessions">
+        <h2>SESSIONS</h2>
+        <div class="row"><span>string</span><span>token_hash</span><span>PK</span></div>
+        <div class="row"><span>string</span><span>user_id</span><span>FK</span></div>
+        <div class="row"><span>string</span><span>expires_at</span><span></span></div>
+        <div class="row"><span>string</span><span>created_at</span><span></span></div>
+      </article>
+
+      <article class="table saved">
+        <h2>SAVED_GIFTS</h2>
+        <div class="row"><span>string</span><span>user_id</span><span>FK</span></div>
+        <div class="row"><span>int</span><span>gift_id</span><span>FK</span></div>
+        <div class="row"><span>string</span><span>created_at</span><span></span></div>
+        <div class="row"><span>key</span><span>user_id + gift_id</span><span>PK</span></div>
+      </article>
+
+      <article class="table session-note">
+        <h2>LOCAL APP STATE</h2>
+        <div class="row"><span>JSON</span><span>questionnaire</span><span></span></div>
+        <div class="row"><span>JSON</span><span>preferences</span><span></span></div>
+        <div class="row"><span>JSON</span><span>search_history</span><span></span></div>
+        <div class="row"><span>note</span><span>stored in browser</span><span></span></div>
+      </article>
+      <div class="note">User preferences and questionnaire progress are currently stored in browser localStorage, not SQLite.</div>
+    </section>
+    <section class="explanation" aria-label="Relationship explanations">
+      <div><strong>1. USERS → SESSIONS</strong>Each login session belongs to a user through <b>sessions.user_id</b>.</div>
+      <div><strong>2. USERS → SAVED_GIFTS</strong>A user can save many gifts through <b>saved_gifts.user_id</b>.</div>
+      <div><strong>3. GIFTS → SAVED_GIFTS</strong>A gift can be saved by many users through <b>saved_gifts.gift_id</b>.</div>
+      <div><strong>4. LOCAL APP STATE</strong>Questionnaire answers and preferences stay in browser localStorage, not SQLite.</div>
+    </section>
+    <footer><span>Gift Genie backend schema</span><span>Prepared for project review and printing</span></footer>
+  </main>
+</body>
+</html>

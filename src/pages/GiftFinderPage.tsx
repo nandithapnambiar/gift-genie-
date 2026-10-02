@@ -7,18 +7,21 @@ import {
   GenieMascot,
 } from '../components';
 import { useAppStore } from '../store';
+import { api } from '../api';
 import {
   RECIPIENT_TYPES,
   INTERESTS,
   OCCASIONS,
   BUDGET_RANGES,
   GIFT_STYLES,
+  getPlayfulErrorMessage,
 } from '../constants';
 
 export const GiftFinderPage: React.FC = () => {
   const { questionnaire, updateQuestionnaire, setCurrentPage } = useAppStore();
   const [currentStep, setCurrentStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const totalSteps = 5;
 
@@ -38,10 +41,16 @@ export const GiftFinderPage: React.FC = () => {
 
   const handleFindGifts = async () => {
     setIsLoading(true);
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    setIsLoading(false);
-    setCurrentPage('recommendations');
+    setError('');
+    try {
+      await api.recommendations(questionnaire);
+      setCurrentPage('recommendations');
+    } catch (requestError) {
+      const message = requestError instanceof Error ? requestError.message : 'Unable to find gifts right now';
+      setError(getPlayfulErrorMessage(message));
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const isStepValid = () => {
@@ -179,6 +188,11 @@ export const GiftFinderPage: React.FC = () => {
               <p className="text-mauve/70">Finding gifts they'll love</p>
             </div>
           </div>
+        )}
+        {error && (
+          <p role="alert" className="mb-6 rounded-xl bg-coral/10 p-4 text-coral">
+            {error}
+          </p>
         )}
 
         {/* Navigation */}

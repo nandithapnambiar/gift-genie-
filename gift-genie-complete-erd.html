@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gift Genie Complete Data Design</title>
+  <style>
+    @page { size: A4 landscape; margin: 8mm; }
+    :root { --blue:#416f9d; --blue-dark:#28537d; --ink:#1f3345; --line:#93a9ba; --pale:#f4f8fb; --gold:#e1a84b; }
+    * { box-sizing:border-box; }
+    body { margin:0; color:var(--ink); font-family:Arial,Helvetica,sans-serif; background:#fff; }
+    .page { max-width:1450px; margin:auto; padding:16px 20px; }
+    header { display:flex; justify-content:space-between; gap:18px; align-items:flex-start; }
+    h1 { margin:0; font-size:27px; color:var(--blue-dark); letter-spacing:-.4px; }
+    .subtitle { margin:5px 0 0; color:#5f7180; font-size:12px; }
+    .badge { padding:7px 11px; color:white; background:linear-gradient(135deg,var(--blue-dark),#6c9ac2); border-radius:18px; font-size:11px; font-weight:bold; white-space:nowrap; }
+    .diagram { position:relative; height:600px; margin-top:13px; border:1px solid #d5e0e8; border-radius:10px; overflow:hidden; background:radial-gradient(circle at 50% 40%,#fff 0,#fbfdff 50%,#f1f6fa 100%); }
+    svg { position:absolute; inset:0; width:100%; height:100%; z-index:0; }
+    .link { stroke:var(--line); stroke-width:2; fill:none; }
+    .link.dashed { stroke-dasharray:7 6; }
+    .link-label { fill:#526a7d; font:600 11px Arial; }
+    .table { position:absolute; width:248px; border:2px solid var(--blue); border-radius:7px; background:#fff; overflow:hidden; box-shadow:0 7px 18px #416f9d22; z-index:2; }
+    .table h2 { margin:0; padding:9px 10px; color:#fff; text-align:center; font-size:13px; letter-spacing:.8px; background:linear-gradient(135deg,var(--blue-dark),#6d9bc2); }
+    .users { left:3%; top:55px; } .gifts { left:36.5%; top:30px; width:275px; } .sessions { right:3%; top:55px; }
+    .saved { left:16%; bottom:40px; } .state { right:16%; bottom:40px; width:275px; }
+    .field { display:grid; grid-template-columns:58px 1fr 38px; min-height:25px; border-top:1px solid #dce5eb; font-size:10.5px; }
+    .field span { padding:5px 7px; } .field span:first-child { color:#657988; } .field span:last-child { color:var(--blue-dark); font-weight:bold; text-align:center; }
+    .pill { position:absolute; z-index:3; padding:5px 9px; color:#36536b; border:1px solid #c1d1dd; background:#fff; border-radius:13px; font-size:10px; font-weight:bold; box-shadow:0 2px 5px #0000000d; }
+    .p1 { left:29%; top:210px; } .p2 { left:9%; top:355px; } .p3 { left:43%; top:382px; } .p4 { right:12%; top:355px; }
+    .feature-strip { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; position:absolute; left:20px; right:20px; bottom:10px; z-index:4; }
+    .feature { padding:7px 9px; border-radius:7px; background:#ffffffeb; border:1px solid #cbd9e3; font-size:10px; color:#506575; }
+    .feature strong { display:block; color:var(--blue-dark); font-size:11px; margin-bottom:3px; }
+    .feature em { color:var(--gold); font-style:normal; }
+    footer { margin-top:8px; display:flex; justify-content:space-between; color:#657988; font-size:10px; }
+    @media print { .page{padding:0;} .diagram{border:0;} }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header>
+      <div>
+        <h1>Gift Genie | Complete Data Design</h1>
+        <p class="subtitle">A creative entity relationship view of authentication, gifts, saved collections, recommendations, and user preferences.</p>
+      </div>
+      <div class="badge">React + Express + SQLite</div>
+    </header>
+    <section class="diagram" aria-label="Gift Genie complete database design">
+      <svg viewBox="0 0 1200 600" preserveAspectRatio="none" aria-hidden="true">
+        <defs><marker id="arrow" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#93a9ba"/></marker></defs>
+        <path class="link" d="M290 125 C430 125 720 125 910 125" marker-end="url(#arrow)"/>
+        <text class="link-label" x="550" y="112">creates secure sessions</text>
+        <path class="link" d="M270 245 C310 330 350 390 410 470" marker-end="url(#arrow)"/>
+        <text class="link-label" x="285" y="355">saves favourites</text>
+        <path class="link" d="M600 205 C560 320 500 410 430 470" marker-end="url(#arrow)"/>
+        <text class="link-label" x="515" y="350">gift is selected</text>
+        <path class="link dashed" d="M1010 250 C960 350 880 420 805 470" marker-end="url(#arrow)"/>
+        <text class="link-label" x="900" y="355">browser-only state</text>
+      </svg>
+
+      <article class="table users">
+        <h2>USERS</h2>
+        <div class="field"><span>string</span><span>id</span><span>PK</span></div>
+        <div class="field"><span>string</span><span>name</span><span></span></div>
+        <div class="field"><span>string</span><span>email</span><span>UQ</span></div>
+        <div class="field"><span>string</span><span>password_hash</span><span></span></div>
+        <div class="field"><span>string</span><span>avatar</span><span></span></div>
+        <div class="field"><span>string</span><span>created_at</span><span></span></div>
+      </article>
+
+      <article class="table gifts">
+        <h2>GIFTS - RECOMMENDATION CATALOGUE</h2>
+        <div class="field"><span>int</span><span>id</span><span>PK</span></div>
+        <div class="field"><span>string</span><span>name</span><span></span></div>
+        <div class="field"><span>int</span><span>price</span><span></span></div>
+        <div class="field"><span>float</span><span>rating</span><span></span></div>
+        <div class="field"><span>int</span><span>reviews</span><span></span></div>
+        <div class="field"><span>string</span><span>category</span><span></span></div>
+        <div class="field"><span>string</span><span>badge</span><span></span></div>
+        <div class="field"><span>string</span><span>image</span><span></span></div>
+        <div class="field"><span>string</span><span>explanation</span><span></span></div>
+        <div class="field"><span>JSON</span><span>tags</span><span></span></div>
+      </article>
+
+      <article class="table sessions">
+        <h2>SESSIONS - AUTHENTICATION</h2>
+        <div class="field"><span>string</span><span>token_hash</span><span>PK</span></div>
+        <div class="field"><span>string</span><span>user_id</span><span>FK</span></div>
+        <div class="field"><span>string</span><span>expires_at</span><span></span></div>
+        <div class="field"><span>string</span><span>created_at</span><span></span></div>
+      </article>
+
+      <article class="table saved">
+        <h2>SAVED_GIFTS - WISHLIST</h2>
+        <div class="field"><span>string</span><span>user_id</span><span>FK</span></div>
+        <div class="field"><span>int</span><span>gift_id</span><span>FK</span></div>
+        <div class="field"><span>string</span><span>created_at</span><span></span></div>
+        <div class="field"><span>key</span><span>user_id + gift_id</span><span>PK</span></div>
+      </article>
+
+      <article class="table state">
+        <h2>BROWSER STATE - PERSONALIZATION</h2>
+        <div class="field"><span>JSON</span><span>questionnaire</span><span></span></div>
+        <div class="field"><span>JSON</span><span>preferences</span><span></span></div>
+        <div class="field"><span>JSON</span><span>search_history</span><span></span></div>
+        <div class="field"><span>note</span><span>localStorage</span><span></span></div>
+      </article>
+
+      <span class="pill p1">1 : many</span>
+      <span class="pill p2">many : many bridge</span>
+      <span class="pill p3">wishlist link</span>
+      <span class="pill p4">not persisted in SQLite</span>
+
+      <div class="feature-strip">
+        <div class="feature"><strong>Gift Finder</strong><em>GIFTS</em> are scored by budget, interests, and style.</div>
+        <div class="feature"><strong>Secure login</strong><em>USERS + SESSIONS</em> protect saved content.</div>
+        <div class="feature"><strong>Saved collection</strong><em>SAVED_GIFTS</em> connects people to favourites.</div>
+        <div class="feature"><strong>Personal experience</strong><em>BROWSER STATE</em> remembers preferences.</div>
+      </div>
+    </section>
+    <footer><span>PK = primary key | FK = foreign key | UQ = unique field</span><span>Prepared for Gift Genie project review</span></footer>
+  </main>
+</body>
+</html>

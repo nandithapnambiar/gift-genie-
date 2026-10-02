@@ -8,3 +8,6 @@ export { DiscoverPage } from './DiscoverPage';
 export { SavedGiftsPage } from './SavedGiftsPage';
 export { ProfilePage } from './ProfilePage';
 export { GiftDetailPage } from './GiftDetailPage';
+export { HelpSupportPage } from './HelpSupportPage';
+export { AccessibilityPage } from './AccessibilityPage';
+export { SettingsPage } from './SettingsPage';

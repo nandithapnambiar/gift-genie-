@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Project Plan - Gift Genie</title>
+  <style>
+    :root {
+      --ink: #151b22;
+      --muted: #4d5965;
+      --grid: #c9d0d6;
+      --section: #e9eef2;
+      --done: #159b9a;
+      --active: #3e90c2;
+      --pending: #9aa7b2;
+      --milestone: #159b9a;
+      --cream: #fffaf2;
+    }
+
+    * { box-sizing: border-box; }
+
+    @page {
+      size: A4 landscape;
+      margin: 10mm;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: white;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .page {
+      width: 100%;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 16px 18px 12px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      margin: 0 0 5px;
+      font-size: 27px;
+      letter-spacing: -0.4px;
+    }
+
+    .subtitle {
+      margin: 3px 0;
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 14px;
+      min-width: 240px;
+      padding-top: 4px;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .swatch {
+      width: 18px;
+      height: 14px;
+      display: inline-block;
+      border: 1px solid #65727d;
+      border-radius: 3px;
+    }
+
+    .swatch.done { background: var(--done); }
+    .swatch.active { background: var(--active); }
+    .diamond {
+      width: 13px;
+      height: 13px;
+      transform: rotate(45deg);
+      background: var(--milestone);
+      border: 1px solid #397474;
+      display: inline-block;
+      margin: 0 3px;
+    }
+
+    .gantt {
+      display: grid;
+      grid-template-columns: 370px repeat(6, minmax(100px, 1fr));
+      border-top: 1px solid var(--grid);
+      border-left: 1px solid var(--grid);
+      font-size: 12px;
+    }
+
+    .cell {
+      min-height: 30px;
+      border-right: 1px solid var(--grid);
+      border-bottom: 1px solid var(--grid);
+      position: relative;
+    }
+
+    .week {
+      padding: 6px 8px;
+      text-align: center;
+      font-weight: 700;
+      background: #f7f8f9;
+    }
+
+    .task-label {
+      padding: 6px 10px 6px 16px;
+      display: flex;
+      align-items: center;
+      min-height: 30px;
+      background: var(--cream);
+    }
+
+    .task-label strong {
+      font-size: 13px;
+      margin-right: 5px;
+    }
+
+    .section-label {
+      grid-column: 1 / -1;
+      min-height: 28px;
+      padding: 5px 10px;
+      background: var(--section);
+      border-right: 1px solid var(--grid);
+      border-bottom: 1px solid var(--grid);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .bar {
+      position: absolute;
+      top: 5px;
+      bottom: 5px;
+      left: 4px;
+      right: 4px;
+      border-radius: 4px;
+      border: 1px solid #397474;
+      background: var(--done);
+    }
+
+    .bar.active {
+      background: var(--active);
+      border-color: #276483;
+    }
+
+    .bar.pending {
+      background: var(--pending);
+      border-color: #6f7d88;
+    }
+
+    .bar-label {
+      position: absolute;
+      left: calc(100% + 8px);
+      top: 5px;
+      white-space: nowrap;
+      font-size: 11px;
+      color: var(--ink);
+      z-index: 2;
+    }
+
+    .milestone {
+      position: absolute;
+      top: 8px;
+      left: calc(50% - 7px);
+      width: 14px;
+      height: 14px;
+      transform: rotate(45deg);
+      background: var(--milestone);
+      border: 1px solid #397474;
+    }
+
+    .milestone-label {
+      position: absolute;
+      left: calc(50% + 14px);
+      top: 5px;
+      white-space: nowrap;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .status {
+      margin-left: auto;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    @media print {
+      .page { padding: 0; }
+      .gantt { font-size: 10px; }
+      .task-label strong { font-size: 11px; }
+      .section-label { font-size: 12px; }
+      .bar-label, .milestone-label { font-size: 9px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header>
+      <div>
+        <h1>Project Plan: Building the Gift Genie App</h1>
+        <p class="subtitle"><strong>Start date:</strong> Monday, Aug 3, 2026 &nbsp;&nbsp; <strong>End date:</strong> Wednesday, Sep 30, 2026</p>
+        <p class="subtitle"><strong>Overall focus:</strong> Build, connect, test, and prepare Gift Genie for public deployment.</p>
+      </div>
+      <div class="legend" aria-label="Project status legend">
+        <span class="legend-item"><i class="swatch done"></i> Done</span>
+        <span class="legend-item"><i class="swatch active"></i> Active</span>
+        <span class="legend-item"><i class="diamond"></i> Milestone</span>
+      </div>
+    </header>
+
+    <section class="gantt" aria-label="Gift Genie project schedule">
+      <div class="cell week">Workstream / Task</div>
+      <div class="cell week">Week 1<br>Aug 3</div>
+      <div class="cell week">Week 2<br>Aug 10</div>
+      <div class="cell week">Week 3<br>Aug 17</div>
+      <div class="cell week">Week 4<br>Aug 24</div>
+      <div class="cell week">Week 5<br>Aug 31</div>
+      <div class="cell week">Week 6<br>Sep 7</div>
+
+      <div class="section-label">Phase 1 - Frontend foundation and visual design</div>
+      <div class="cell task-label"><strong>React/Vite project setup</strong><span class="status">done</span></div>
+      <div class="cell"><i class="bar"><span class="bar-label">Aug 3–4</span></i></div>
+      <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+
+      <div class="cell task-label"><strong>Gift Genie branding, colors, and layout</strong><span class="status">done</span></div>
+      <div class="cell"><i class="bar"><span class="bar-label">Aug 4–6</span></i></div>
+      <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+
+      <div class="cell task-label"><strong>Responsive pages and navigation</strong><span class="status">done</span></div>
+      <div class="cell"></div><div class="cell"><i class="bar"><span class="bar-label">Aug 7–11</span></i></div>
+      <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+
+      <div class="cell task-label">      <strong>Milestone 1 - Frontend experience ready</strong></div>
+      <div class="cell"></div><div class="cell"><div class="milestone"></div><span class="milestone-label">Frontend screens ready</span></div>
+      <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+
+      <div class="section-label">Phase 2 - User flows and app interactivity</div>
+      <div class="cell task-label"><strong>Login, signup, and profile flows</strong><span class="status">done</span></div>
+      <div class="cell"></div><div class="cell"></div><div class="cell"><i class="bar"><span class="bar-label">Aug 17–18</span></i></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+
+      <div class="cell task-label"><strong>Gift Finder questionnaire</strong><span class="status">done</span></div>
+      <div class="cell"></div><div class="cell"></div><div class="cell"><i class="bar"><span class="bar-label">Aug 18–20</span></i></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+
+      <div class="cell task-label"><strong>Discover, saved gifts, and gift details</strong><span class="status">done</span></div>
+      <div class="cell"></div><div class="cell"></div><div class="cell"><i class="bar"><span class="bar-label">Aug 20–24</span></i></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+
+      <div class="cell task-label">      <strong>Milestone 2 - Complete frontend flow</strong></div>
+      <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"><div class="milestone"></div><span class="milestone-label">User flow complete</span></div><div class="cell"></div><div class="cell"></div>
+
+      <div class="section-label">Phase 3 - Backend, database, and security</div>
+      <div class="cell task-label"><strong>Express API and SQLite database</strong><span class="status">done</span></div>
+      <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"><i class="bar"><span class="bar-label">Aug 24–26</span></i></div><div class="cell"></div><div class="cell"></div>
+
+      <div class="cell task-label"><strong>Authentication and persistent sessions</strong><span class="status">done</span></div>
+      <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"><i class="bar"><span class="bar-label">Aug 26–28</span></i></div><div class="cell"></div><div class="cell"></div>
+
+      <div class="cell task-label"><strong>Recommendations, saved gifts, and validation</strong><span class="status">done</span></div>
+      <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"><i class="bar"><span class="bar-label">Aug 31–Sep 3</span></i></div><div class="cell"></div>
+
+      <div class="cell task-label">      <strong>Milestone 3 - Full-stack MVP working</strong></div>
+      <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"><div class="milestone"></div><span class="milestone-label">Local full-stack app ready</span></div><div class="cell"></div>
+
+      <div class="section-label">Phase 4 - Quality assurance and public launch</div>
+      <div class="cell task-label"><strong>API tests, linting, and production build</strong><span class="status">done</span></div>
+      <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"><i class="bar"><span class="bar-label">Sep 3–5</span></i></div><div class="cell"></div>
+
+      <div class="cell task-label"><strong>Push repository and configure deployment</strong><span class="status">active</span></div>
+      <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"><i class="bar active"><span class="bar-label">Sep 7–10</span></i></div>
+
+      <div class="cell task-label"><strong>Deploy backend to Render and frontend to Vercel</strong><span class="status">pending</span></div>
+      <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"><i class="bar pending"><span class="bar-label">Sep 11–18</span></i></div>
+
+      <div class="cell task-label">      <strong>Milestone 4 - Public Gift Genie release</strong></div>
+      <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"><div class="milestone"></div><span class="milestone-label">Ready for public release</span></div>
+    </section>
+
+    <footer>
+      <span>Prepared for Gift Genie project review</span>
+      <span>Dates are indicative; completed work is marked “Done”.</span>
+    </footer>
+  </main>
+</body>
+</html>

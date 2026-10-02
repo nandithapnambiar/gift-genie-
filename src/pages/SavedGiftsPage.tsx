@@ -5,7 +5,7 @@ import { useAppStore } from '../store';
 import { MOCK_PRODUCTS } from '../constants';
 
 export const SavedGiftsPage: React.FC = () => {
-  const { savedGifts, toggleSaveGift, setCurrentPage } = useAppStore();
+  const { savedGifts, toggleSaveGift, setCurrentPage, giftTracker, toggleGiftTracker } = useAppStore();
 
   const savedProducts = MOCK_PRODUCTS.filter((p) => savedGifts.includes(p.id));
 
@@ -68,13 +68,22 @@ export const SavedGiftsPage: React.FC = () => {
                 {...product}
                 onViewDetails={() => setCurrentPage(`gift-${product.id}`)}
               />
-              <button
-                onClick={() => toggleSaveGift(product.id)}
-                className="absolute top-2 right-2 bg-white rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity"
-                title="Remove from saved"
-              >
-                <Trash2 size={20} className="text-coral" />
-              </button>
+              <div className="absolute top-2 right-2 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                <button
+                  onClick={() => toggleSaveGift(product.id)}
+                  className="bg-white rounded-full p-2"
+                  title="Remove from saved"
+                >
+                  <Trash2 size={20} className="text-coral" />
+                </button>
+                <button
+                  onClick={() => toggleGiftTracker(product.id)}
+                  className={`rounded-full p-2 ${giftTracker.includes(product.id) ? 'bg-coral text-white' : 'bg-white text-mauve'}`}
+                  title={giftTracker.includes(product.id) ? 'Undo gift given' : 'Mark as given'}
+                >
+                  <Heart size={20} className={giftTracker.includes(product.id) ? 'fill-current' : ''} />
+                </button>
+              </div>
             </div>
           ))}
         </div>

@@ -8,6 +8,7 @@ export const DiscoverPage: React.FC = () => {
   const { setCurrentPage } = useAppStore();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [ecoOnly, setEcoOnly] = useState(false);
 
   const categories = [
     'All',
@@ -26,7 +27,8 @@ export const DiscoverPage: React.FC = () => {
     const matchesCategory = !selectedCategory ||
       selectedCategory === 'All' ||
       product.category === selectedCategory;
-    return matchesSearch && matchesCategory;
+    const matchesEco = !ecoOnly || Boolean((product as typeof product & { ecoFriendly?: boolean }).ecoFriendly);
+    return matchesSearch && matchesCategory && matchesEco;
   });
 
   return (
@@ -49,7 +51,7 @@ export const DiscoverPage: React.FC = () => {
           </div>
 
           {/* Categories */}
-          <div className="flex flex-wrap gap-2 mb-8">
+          <div className="flex flex-wrap gap-2 mb-4">
             {categories.map((category) => (
               <button
                 key={category}
@@ -67,6 +69,19 @@ export const DiscoverPage: React.FC = () => {
                 {category}
               </button>
             ))}
+          </div>
+
+          <div className="mb-6 flex items-center justify-between gap-3 rounded-2xl border border-olive/40 bg-white p-3">
+            <div>
+              <p className="font-semibold text-mauve">Eco-friendly finds</p>
+              <p className="text-xs text-mauve/60">Sustainable and handmade picks only</p>
+            </div>
+            <button
+              onClick={() => setEcoOnly((value) => !value)}
+              className={`rounded-full px-4 py-2 text-sm font-semibold ${ecoOnly ? 'bg-sage text-mauve' : 'bg-olive text-mauve'}`}
+            >
+              {ecoOnly ? 'On' : 'Off'}
+            </button>
           </div>
 
           <p className="text-mauve/70 mb-6">

@@ -29,56 +29,50 @@ export const GiftCard: React.FC<GiftCardProps> = ({
   const isSaved = savedGifts.includes(id);
 
   return (
-    <article className="bg-white rounded-2xl shadow-soft overflow-hidden hover:-translate-y-1 hover:shadow-soft-lg transition-all group">
-      {/* Image Container */}
+    <article className="gift-card group overflow-hidden">
       <div className="relative h-48 sm:h-56 overflow-hidden bg-olive/20">
         <img
           src={image}
           alt={name}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
         />
         {badge && (
-          <div className="absolute top-3 right-3 bg-coral text-white px-3 py-1 rounded-full text-xs font-semibold">
+          <div className="absolute right-3 top-3 rounded-full bg-coral px-3 py-1 text-xs font-semibold text-white shadow-soft-sm">
             {badge}
           </div>
         )}
         <button
           onClick={() => toggleSaveGift(id)}
-          className={`absolute top-3 left-3 bg-white rounded-full p-2 hover:scale-110 transition-transform ${
+          className={`absolute left-3 top-3 rounded-full border border-white/60 bg-white/85 p-2.5 shadow-soft-sm transition-all hover:scale-110 ${
             isSaved ? 'animate-heart-pop' : ''
           }`}
           aria-label={isSaved ? 'Remove from saved' : 'Save gift'}
         >
           <Heart
-            size={20}
+            size={18}
             className={`transition-all ${isSaved ? 'fill-coral text-coral' : 'text-mauve'}`}
           />
         </button>
       </div>
 
-      {/* Content */}
       <div className="p-4">
-        <h3 className="font-semibold text-mauve line-clamp-2 mb-2">{name}</h3>
+        <h3 className="mb-2 line-clamp-2 text-base font-semibold text-mauve">{name}</h3>
 
-        {/* Rating */}
-        <div className="flex items-center gap-1 mb-3">
-          <Star size={16} className="fill-coral text-coral" />
+        <div className="mb-3 flex items-center gap-1">
+          <Star size={15} className="fill-coral text-coral" />
           <span className="text-sm font-semibold text-mauve">{rating}</span>
           <span className="text-xs text-mauve/60">({reviews.toLocaleString()} reviews)</span>
         </div>
 
-        {/* Price */}
-        <p className="text-lg font-bold text-mauve mb-2">₹{price.toLocaleString()}</p>
+        <p className="mb-3 text-lg font-bold text-mauve">₹{price.toLocaleString()}</p>
 
-        {/* Explanation */}
         {explanation && (
-          <p className="text-sm text-mauve/70 mb-3 line-clamp-2">{explanation}</p>
+          <p className="mb-3 text-sm text-mauve/70 line-clamp-2">{explanation}</p>
         )}
 
-        {/* CTA */}
         <button
           onClick={onViewDetails}
-          className="w-full bg-sage hover:bg-sage/80 text-mauve font-semibold py-2 rounded-xl transition-colors"
+          className="w-full rounded-xl bg-sage/80 px-3 py-2.5 text-sm font-semibold text-mauve transition-colors hover:bg-sage"
         >
           View Details
         </button>

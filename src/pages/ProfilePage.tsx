@@ -1,6 +1,7 @@
 import React from 'react';
 import { Heart, History, Bell, Settings, HelpCircle, LogOut, CheckCircle2 } from 'lucide-react';
 import { useAppStore } from '../store';
+import { MOCK_PRODUCTS } from '../constants';
 
 export const ProfilePage: React.FC = () => {
   const {
@@ -11,6 +12,10 @@ export const ProfilePage: React.FC = () => {
     updatePreferences,
     savedGifts,
     searchHistory,
+    giftTracker,
+    giftMemories,
+    giftReminders,
+    addGiftReminder,
   } = useAppStore();
   const [message, setMessage] = React.useState<string | null>(null);
   const accessibilityOptions: Array<{
@@ -39,6 +44,10 @@ export const ProfilePage: React.FC = () => {
       description: 'Enhanced labels for screen readers',
     },
   ];
+
+  const trackedProducts = MOCK_PRODUCTS.filter((product) => giftTracker.includes(product.id));
+  const upcomingReminders = giftReminders.slice(0, 3);
+  const recentMemories = giftMemories.slice(0, 3);
 
   const menuItems = [
     { icon: Heart, label: 'Saved Gifts', action: () => setCurrentPage('saved') },
@@ -108,6 +117,63 @@ export const ProfilePage: React.FC = () => {
           ))}
         </div>
 
+        <div className="bg-white rounded-2xl shadow-soft p-6 sm:p-8 mb-8">
+          <h3 className="heading-3 mb-6">Gift Tracker</h3>
+          <p className="mb-4 text-sm text-mauve/70">
+            {trackedProducts.length} {trackedProducts.length === 1 ? 'gift logged' : 'gifts logged'} as already given.
+          </p>
+          {trackedProducts.length > 0 ? (
+            <div className="space-y-2">
+              {trackedProducts.slice(0, 4).map((product) => (
+                <div key={product.id} className="flex items-center justify-between rounded-xl bg-olive/20 px-3 py-2 text-sm text-mauve">
+                  <span>{product.name}</span>
+                  <span className="text-coral font-semibold">Marked done</span>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-sm text-mauve/70">No gifts logged yet. Mark one as given from a gift detail page to keep your list fresh.</p>
+          )}
+        </div>
+
+        <div className="bg-white rounded-2xl shadow-soft p-6 sm:p-8 mb-8">
+          <h3 className="heading-3 mb-6">Gift reminders</h3>
+          <div className="space-y-3">
+            {upcomingReminders.map((reminder) => (
+              <div key={reminder.id} className="rounded-xl border border-olive/20 bg-olive/10 p-3">
+                <p className="font-semibold text-mauve">{reminder.title}</p>
+                <p className="text-sm text-mauve/70">{reminder.message}</p>
+              </div>
+            ))}
+          </div>
+          <button
+            onClick={() => addGiftReminder({
+              title: 'Upcoming birthday',
+              date: '2026-11-02',
+              message: 'A cheerful surprise reminder is ready to be sent.',
+            })}
+            className="mt-4 text-sm font-semibold text-coral"
+          >
+            + Add reminder
+          </button>
+        </div>
+
+        <div className="bg-white rounded-2xl shadow-soft p-6 sm:p-8 mb-8">
+          <h3 className="heading-3 mb-6">Memory vault</h3>
+          <div className="space-y-4">
+            {recentMemories.map((memory) => (
+              <div key={memory.id} className="flex gap-3 rounded-xl border border-olive/20 p-3">
+                <img src={memory.image} alt={memory.title} className="h-16 w-16 rounded-lg object-cover" />
+                <div className="min-w-0">
+                  <p className="font-semibold text-mauve">{memory.title}</p>
+                  <p className="text-xs text-mauve/60">{memory.date}</p>
+                  <p className="text-sm text-mauve/70">{memory.note}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
         {/* Preferences */}
         <div className="bg-white rounded-2xl shadow-soft p-6 sm:p-8 mb-8">
           <h3 className="heading-3 mb-6">Preferences</h3>
@@ -146,19 +212,22 @@ export const ProfilePage: React.FC = () => {
                   <p className="text-sm text-mauve/60">{description}</p>
                 </div>
                 <button
+                  type="button"
+                  aria-pressed={preferences[key]}
+                  aria-label={`${label} ${preferences[key] ? 'enabled' : 'disabled'}`}
                   onClick={() =>
                     updatePreferences({
                       [key]: !preferences[key],
                     })
                   }
-                  className={`relative w-12 h-7 rounded-full transition-colors ${
+                  className={`relative h-7 w-12 flex-shrink-0 rounded-full border border-mauve/10 transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-coral focus-visible:ring-offset-2 ${
                     preferences[key]
                       ? 'bg-coral'
                       : 'bg-olive'
                   }`}
                 >
                   <div
-                    className={`absolute w-5 h-5 bg-white rounded-full top-1 transition-transform ${
+                    className={`absolute top-1 h-5 w-5 rounded-full bg-white shadow-sm transition-transform duration-200 ${
                       preferences[key]
                         ? 'translate-x-6'
                         : 'translate-x-1'

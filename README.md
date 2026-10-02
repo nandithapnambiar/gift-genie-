@@ -176,6 +176,9 @@ Available endpoints:
 
 The SQLite database is created at `data/gift-genie.sqlite` and ignored by Git.
 Passwords are salted and hashed with Node's `scrypt` implementation.
+Authentication sessions are stored in SQLite with an expiry, so users remain
+signed in when the API restarts. Configure `SESSION_TTL_DAYS` to change the
+session lifetime.
 
 ## 🚀 Deployment
 
@@ -188,6 +191,8 @@ Deployment configuration is included for Vercel and Render:
    `https://your-render-service.onrender.com/api`
 
 The Render service includes a persistent disk for the SQLite database.
+Set `ALLOWED_ORIGINS` on Render to the deployed Vercel URL (comma-separated
+for multiple origins). Do not use `*` for a production deployment.
 
 ## 💾 State Management
 

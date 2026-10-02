@@ -60,7 +60,7 @@ The API seeds 12 realistic gift products into SQLite on first start:
 **Gift Finder Flow:**
 1. Home → "Find the Perfect Gift ✨" button
 2. Answer 5 questions about the recipient
-3. Wait for loading animation (2 seconds)
+3. Wait for the Genie to load recommendations from the API
 4. See personalized recommendations
 5. Click "View Details" on any gift
 
@@ -130,6 +130,9 @@ npm run preview
 
 # Run linter
 npm run lint
+
+# Run backend API tests
+npm run test:api
 ```
 
 ## 📁 Key Files to Modify

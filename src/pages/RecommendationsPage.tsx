@@ -1,16 +1,38 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Sparkles } from 'lucide-react';
 import { GiftCard, FilterChip } from '../components';
 import { useAppStore } from '../store';
-import { BUDGET_RANGES, MOCK_PRODUCTS } from '../constants';
+import { api, type ApiGift } from '../api';
+import { BUDGET_RANGES, getPlayfulErrorMessage } from '../constants';
 
 export const RecommendationsPage: React.FC = () => {
   const { questionnaire, setCurrentPage } = useAppStore();
   const [sortBy, setSortBy] = useState('best-match');
   const [filterBudget, setFilterBudget] = useState<string | null>(null);
+  const [products, setProducts] = useState<ApiGift[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState('');
 
-  // Filter products based on questionnaire
-  const filteredProducts = MOCK_PRODUCTS
+  useEffect(() => {
+    let active = true;
+    setIsLoading(true);
+    setError('');
+    api.recommendations(questionnaire)
+      .then((gifts) => {
+        if (active) setProducts(gifts);
+      })
+      .catch((requestError: Error) => {
+        if (active) setError(getPlayfulErrorMessage(requestError.message));
+      })
+      .finally(() => {
+        if (active) setIsLoading(false);
+      });
+    return () => {
+      active = false;
+    };
+  }, [questionnaire]);
+
+  const filteredProducts = products
     .filter((product) => {
       const activeBudget = filterBudget || questionnaire.budget;
       if (activeBudget) {
@@ -109,6 +131,11 @@ export const RecommendationsPage: React.FC = () => {
         </div>
 
         {/* Products Grid */}
+        {isLoading && <p className="text-mauve/70 mb-8">Your Genie is finding the best matches...</p>}
+        {error && <p className="text-coral mb-8">{error}</p>}
+        {!isLoading && !error && filteredProducts.length === 0 && (
+          <p className="text-mauve/70 mb-8">No exact matches found. Try a wider budget or different preferences.</p>
+        )}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
           {filteredProducts.map((product) => (
             <GiftCard

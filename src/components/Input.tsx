@@ -14,12 +14,13 @@ export const Input: React.FC<InputProps> = ({
   icon: Icon,
   helperText,
   className,
+  id,
   ...props
 }) => {
   return (
     <div className="w-full">
       {label && (
-        <label className="block text-sm font-semibold text-mauve mb-2">
+        <label htmlFor={id} className="mb-2 block text-sm font-semibold text-mauve">
           {label}
         </label>
       )}
@@ -30,6 +31,7 @@ export const Input: React.FC<InputProps> = ({
           </div>
         )}
         <input
+          id={id}
           className={`input-field ${Icon ? 'pl-12' : 'pl-4'} ${error ? 'border-coral' : ''} ${className}`}
           {...props}
         />
